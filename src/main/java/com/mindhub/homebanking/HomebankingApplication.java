@@ -2,8 +2,11 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.models.Transaction;
+import com.mindhub.homebanking.models.TransactionType;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.repositories.TransactionRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,10 +21,10 @@ public class HomebankingApplication {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository){
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository){
 		return (args) -> {
-			Client cliente1 = new Client("Cristian", "Fuentes","cristianfuentesmozo@gmail.com");
-			Client cliente2 = new Client("Melba", "Morel", "melba@mindhub.com");
+			Client cliente1 = new Client("Melba", "Morel", "melba@mindhub.com");
+			Client cliente2 = new Client("Cristian", "Fuentes","cristianfuentesmozo@gmail.com");
 			clientRepository.save(cliente1);
 			clientRepository.save(cliente2);
 
@@ -31,6 +34,16 @@ public class HomebankingApplication {
 			accountRepository.save(account1);
 			accountRepository.save(account2);
 			accountRepository.save(account3);
+
+			Transaction transaction1 = new Transaction(TransactionType.DEBIT, -5000.0, "compra 1", now(), account1);
+			Transaction transaction2 = new Transaction(TransactionType.CREDIT, 15000.0, "abono 1", now(), account2);
+
+			transactionRepository.save(transaction1);
+			transactionRepository.save(transaction2);
+
+
+
+
 
 		};
 	}
