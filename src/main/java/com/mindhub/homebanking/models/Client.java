@@ -1,9 +1,11 @@
 package com.mindhub.homebanking.models;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,6 +18,7 @@ public class Client {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     Set<Account> accounts = new HashSet<>();
@@ -30,10 +33,15 @@ public class Client {
     public Client() {
     }
 
-    public Client(String firstName, String lastName, String email) {
+    public Client(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
+    }
+
+    public Client(String firstName, String lastName, String email, String password, List<GrantedAuthority> client) {
+
     }
 
     public Long getId() {
@@ -68,6 +76,14 @@ public class Client {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Set<Account> getAccounts() {
         return accounts;
     }
@@ -96,5 +112,10 @@ public class Client {
 
     public void setCards(Set<Card> cards) {
         this.cards = cards;
+    }
+
+    public void addCards (Card card){
+        card.setClient(this);
+        cards.add(card);
     }
 }
