@@ -35,7 +35,7 @@ public class CardController {
         String fullName = currentClient.getFirstName() + " " + currentClient.getLastName();
         String cardNumber = genereteRandom(1000,9999)+"-"+genereteRandom(1000,9999)+"-"+genereteRandom(1000,9999)+"-"+genereteRandom(1000,9999);
         if (cardRepository.countCardByClientAndType(currentClient, cardType) < 3) {
-            cardRepository.save(new Card(fullName, cardType, cardColor, cardNumber, Integer.parseInt(genereteRandom(100, 999)), LocalDateTime.now(), LocalDateTime.now().plusYears(5), currentClient));
+            cardRepository.save(new Card(fullName, cardType, cardColor, cardNumber, Integer.parseInt(genereteRandom(100, 999)), LocalDateTime.now().plusYears(5), LocalDateTime.now(),  currentClient));
             return new ResponseEntity<>(HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Excced Cards ", HttpStatus.FORBIDDEN);

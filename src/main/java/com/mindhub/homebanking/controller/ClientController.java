@@ -1,5 +1,6 @@
 package com.mindhub.homebanking.controller;
 
+import com.mindhub.homebanking.dto.AccountDTO;
 import com.mindhub.homebanking.dto.ClientDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
@@ -13,8 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -70,11 +73,15 @@ public class ClientController {
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
-    @RequestMapping("clients/current")
+    @RequestMapping("/clients/current")
     public ClientDTO getClient(Authentication authentication) {
         Client clientCurrent =  clientRepository.findByEmail(authentication.getName());
         return new ClientDTO(clientCurrent);
 
+    }
+    @RequestMapping("/clients/current/accounts")
+    public List<AccountDTO> getAccounts(Authentication authentication) {
+        return accountRepository.searchAccountsByOwner(clientRepository.findByEmail(authentication.getName())).stream().map(AccountDTO::new).collect(toList());
     }
 
 }
