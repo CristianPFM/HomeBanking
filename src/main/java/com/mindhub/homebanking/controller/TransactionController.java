@@ -40,16 +40,17 @@ public class TransactionController {
         }
         // Varificar que la cuenta de origen y destino no sean iguales
         if (fromAccountNumber.equals(toAccountNumber)) {
-            return new ResponseEntity<>("Check Account", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Check Account - Same Account", HttpStatus.FORBIDDEN);
         }
         //Verificar que la cuenta de destino exista
         if (accountRepository.findAccountByNumber(toAccountNumber).getNumber().isEmpty()){
-            return new ResponseEntity<>("Check Account", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Check Account - To Account does't exist", HttpStatus.FORBIDDEN);
         }
         // Verificar que la cuenta de origen pertenesca al usuario current
         if (currentClient.getAccounts().stream().filter(account -> account.getNumber().equals(fromAccountNumber)).collect(Collectors.toList()).isEmpty()) {
-            return new ResponseEntity<>("Check Account", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Check Account - Account does not belong to the user ", HttpStatus.FORBIDDEN);
         }
+        //Verificar que el saldo sea mayor que el monto a transferir
         if (accountRepository.findAccountsByNumber(fromAccountNumber).getBalance() < amount) {
             return new ResponseEntity<>("Check Amount", HttpStatus.FORBIDDEN);
         }
