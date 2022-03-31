@@ -1,55 +1,60 @@
 package com.mindhub.homebanking.models;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 public class Client {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
-    private Long id;
 
+    //toda entidad necesita tener un ID
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native") //generar valor para el ID,
+    @GenericGenerator(name = "native", strategy = "native")
+    private long id;
+
+    //atributos
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String email;
     private String password;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    Set<Account> accounts = new HashSet<>();
-
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    Set<ClientLoan> clientLoans = new HashSet<>();
-
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    //relaciones
+    @OneToMany(mappedBy="client", fetch= FetchType.EAGER)
     Set<Card> cards = new HashSet<>();
 
+    //relacion
+    @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
+    Set<Account> accounts = new HashSet<>();
 
-    public Client() {
-    }
+    //relacion con clientLoan
+    @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
+    Set<ClientLoan> clientLoans;
 
-    public Client(String firstName, String lastName, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    //constructor
+    public Client() { }
+
+    public Client(String first, String last, String email, String password) {
+        this.firstName = first;
+        this.lastName = last;
         this.email = email;
         this.password = password;
     }
 
-    public Client(String firstName, String lastName, String email, String password, List<GrantedAuthority> client) {
-
-    }
-
-    public Long getId() {
+    //getters y setters
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {
@@ -68,14 +73,6 @@ public class Client {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -84,26 +81,22 @@ public class Client {
         this.password = password;
     }
 
+    //metodos
+    public String toString() {
+        return firstName + " " + lastName;
+    }
+
     public Set<Account> getAccounts() {
         return accounts;
     }
 
     public void addAccount(Account account) {
-        account.setOwner(this);
+        account.setClient(this);
         accounts.add(account);
     }
 
-    public Set<ClientLoan> getClientLoans() {
+    public Set<ClientLoan> getLoans() {
         return clientLoans;
-    }
-
-    public void setClientLoans(Set<ClientLoan> clientLoans) {
-        this.clientLoans = clientLoans;
-    }
-
-    public void addClientLoans(ClientLoan clientLoan){
-        clientLoan.setClient(this);
-        this.clientLoans.add(clientLoan);
     }
 
     public Set<Card> getCards() {
@@ -114,8 +107,12 @@ public class Client {
         this.cards = cards;
     }
 
-    public void addCards (Card card){
-        card.setClient(this);
-        cards.add(card);
+    public void setClientLoans(Set<ClientLoan> clientLoans) {
+        this.clientLoans = clientLoans;
+    }
+
+    public void addClientLoans(ClientLoan clientLoan) {
+        clientLoan.setClient(this);
+        this.clientLoans.add(clientLoan);
     }
 }

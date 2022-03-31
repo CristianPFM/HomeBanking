@@ -10,7 +10,11 @@ var app = new Vue({
         accountToNumber: "VIN",
         trasnferType: "own",
         amount: 0,
-        description: ""
+        description: "",
+        otpNumber: "",
+        firstName: "",
+        lastName: ""
+
     },
     methods:{
         getData: function(){
@@ -43,7 +47,10 @@ var app = new Vue({
                 this.errorMsg = "You must indicate a description";  
                 this.errorToats.show();
             }else{
-                this.modal.show();
+                this.modal.show()
+                //INCORPORAR ESTE SOLICITUD PARA GENERAR OTP Y ENVIAR CORREO
+                axios.post("/api/otp/send")
+
             }
         },
         transfer: function(){
@@ -52,15 +59,25 @@ var app = new Vue({
                     'content-type': 'application/x-www-form-urlencoded'
                 }
             }
-            axios.post(`/api/transactions?fromAccountNumber=${this.accountFromNumber}&toAccountNumber=${this.accountToNumber}&amount=${this.amount}&description=${this.description}`,config)
-            .then(response => { 
-                this.modal.hide();
-                this.okmodal.show();
-            })
-            .catch((error) =>{
-                this.errorMsg = error.response.data;  
-                this.errorToats.show();
-            })
+            axios.post(`/api/otp/verify?otpNumber=${this.otpNumber}`, config)
+                .then(response => {
+                    axios.post(`/api/transactions?fromAccountNumber=${this.accountFromNumber}&toAccountNumber=${this.accountToNumber}&amount=${this.amount}&description=${this.description}`, config)
+                        .then(response => {
+                            this.modal.hide();
+                            this.okmodal.show();
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            this.errorMsg = error.response.data;
+                            this.errorToats.show();
+                        })}
+                )
+                .catch((error) => {
+                    console.log(error);
+                    this.errorMsg = "Clave de Seguridad Invalida";
+                    this.errorToats.show();
+                    this.modal.hide();
+                })
         },
         changedType: function(){
             this.accountFromNumber = "VIN";
@@ -77,7 +94,7 @@ var app = new Vue({
         },
         signOut: function(){
             axios.post('/api/logout')
-            .then(response => window.location.href="/web/index.html")
+            .then(response => window.location.href="/web/ecobank/index.html")
             .catch(() =>{
                 this.errorMsg = "Sign out failed"   
                 this.errorToats.show();
@@ -88,6 +105,8 @@ var app = new Vue({
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));
         this.modal = new bootstrap.Modal(document.getElementById('confirModal'));
         this.okmodal = new bootstrap.Modal(document.getElementById('okModal'));
+        this.firstName = JSON.parse(sessionStorage.getItem("firstName"));
+        this.lastName = JSON.parse(sessionStorage.getItem("lastName"));
         this.getData();
     }
 })

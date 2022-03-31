@@ -5,6 +5,8 @@ var app = new Vue({
         errorMsg: null,
         cardType:"none",
         cardColor:"none",
+        firstName: "",
+        lastName: ""
     },
     methods:{
         formatDate: function(date){
@@ -12,7 +14,7 @@ var app = new Vue({
         },
         signOut: function(){
             axios.post('/api/logout')
-            .then(response => window.location.href="/web/index.html")
+            .then(response => window.location.href="/web/ecobank/index.html")
             .catch(() =>{
                 this.errorMsg = "Sign out failed"   
                 this.errorToats.show();
@@ -30,7 +32,7 @@ var app = new Vue({
                     }
                 }
                 axios.post(`http://localhost:8080/api/clients/current/cards?cardType=${this.cardType}&cardColor=${this.cardColor}`,config)
-                .then(response => window.location.href = "/web/cards.html")
+                .then(response => window.location.href = "/web/ecobank/cards.html")
                 .catch((error) =>{
                     this.errorMsg = error.response.data;  
                     this.errorToats.show();
@@ -40,5 +42,7 @@ var app = new Vue({
     },
     mounted: function(){
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));
+        this.firstName = JSON.parse(sessionStorage.getItem("firstName"));
+        this.lastName = JSON.parse(sessionStorage.getItem("lastName"));
     }
 })

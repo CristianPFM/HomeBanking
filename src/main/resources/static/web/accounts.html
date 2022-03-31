@@ -25,7 +25,7 @@
             <div class="col-12 col-md-2">
                 <div class="bg-light">
                     <a href="/web/accounts.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                        <img class="menu-logo" src="img/logo.jpeg">
+                        <img class="menu-logo" src="img/logo vinotinto2.png">
 
                     </a>
                     <hr>
@@ -54,6 +54,12 @@
                                 Loans
                             </a>
                         </li>
+                        <li>
+                            <a href="/web/cambio-divisas.html" class="nav-link link-dark">
+                                <i class="bi bi-cash"></i>
+                                Cambio de divisas
+                            </a>
+                        </li>
                     </ul>
                     <hr>
                     <ul class="nav nav-pills flex-column mb-auto">
@@ -69,6 +75,7 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col">
+                        <h3>Valor del dolar actual: <span v-text="valorDolar ? valorDolar : 'Cargando...'"></span></h3>
                         <h2 class="display-6 subtitle">Accounts</h2>
                         <button v-if="clientInfo.accounts != null && clientInfo.accounts.length < 3" v-on:click="create" id="create" class="btn btn-sm btn-outline-success">Create</button>
                     </div>

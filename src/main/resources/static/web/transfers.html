@@ -55,6 +55,12 @@
                                     Loans
                                 </a>
                             </li>
+                            <li>
+                                <a href="/web/cambio-divisas.html" class="nav-link link-dark">
+                                    <i class="bi bi-cash"></i>
+                                    Cambio de divisas
+                                </a>
+                            </li>
                         </ul>
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
@@ -123,7 +129,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Transfer cannot be undone, do you want to continue?
+                        se ha enviado una clave de seguridad a su correo, ingresela para confirmar la transferencia                    </div>
+                    <div>
+                        <label>Ingrese el OTP</label>
+                        <input type="text" class="form-control" v-model="otpNumber">
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>

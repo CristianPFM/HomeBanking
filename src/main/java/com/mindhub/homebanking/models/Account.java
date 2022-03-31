@@ -1,5 +1,6 @@
 package com.mindhub.homebanking.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,37 +11,48 @@ import java.util.Set;
 @Entity
 public class Account {
 
+    //toda entidad necesita tener un ID
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native") //generar valor para el ID,
     @GenericGenerator(name = "native", strategy = "native")
-    private Long id;
+    private long id;
+
+    //relaacion
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="client_id")
+    private Client client;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    private Set<Transaction> transactions = new HashSet<>();
+
+    //atributos
     private String number;
     private LocalDateTime creationDate;
     private Double balance;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="client_id")
-    private Client owner;
-
-    @OneToMany(mappedBy="account", fetch=FetchType.EAGER)
-    Set<Transaction> transactions = new HashSet<>();
-
+    //constructor
     public Account() {
     }
 
-    public Account(String number, LocalDateTime creationDate, Double balance, Client owner) {
+    public Account(String number, LocalDateTime creationDate, double balance, Client client) {
         this.number = number;
         this.creationDate = creationDate;
         this.balance = balance;
-        this.owner = owner;
+        this.client = client;
     }
 
-    public Long getId() {
+    //getters y setters
+    @JsonIgnore
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNumber() {
@@ -59,28 +71,24 @@ public class Account {
         this.creationDate = creationDate;
     }
 
-    public Double getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
-    }
-//    @JsonIgnore
-    public Client getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Client owner) {
-        this.owner = owner;
     }
 
     public Set<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void addTransactions(Transaction transaction) {
-        transaction.setAccount(this);
-        transactions.add(transaction);
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
     }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
 }

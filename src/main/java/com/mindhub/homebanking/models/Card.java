@@ -7,62 +7,61 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Card {
+
+    //toda entidad necesita tener un ID
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native") //generar valor para el ID,
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    private String cardHolder;
-    private CardType type;
-    private CardColor color;
+    //atributos
+    private CardColor cardColor;
+    private CardType cardType;
     private String number;
-    private int cvv;
+    private Integer cvv;
+    private String cardHolder;
     private LocalDateTime thruDate;
     private LocalDateTime fromDate;
 
+    //relaacion
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="client_id")
     private Client client;
 
-    public Card() {}
+    //constructor
+    public Card() {
+    }
 
-    public Card(String cardHolder, CardType type, CardColor color, String number, int cvv, LocalDateTime thruDate, LocalDateTime fromDate, Client client) {
-        this.cardHolder = cardHolder;
-        this.type = type;
-        this.color = color;
+    public Card(CardColor cardColor, CardType cardType, String number, Integer cvv, String cardHolder, LocalDateTime thruDate, LocalDateTime fromDate, Client client) {
+        this.cardColor = cardColor;
+        this.cardType = cardType;
         this.number = number;
         this.cvv = cvv;
+        this.cardHolder = cardHolder;
         this.thruDate = thruDate;
         this.fromDate = fromDate;
         this.client = client;
     }
 
+//getters y setters
     public long getId() {
         return id;
     }
 
-    public String getCardHolder() {
-        return cardHolder;
+    public CardColor getCardColor() {
+        return cardColor;
     }
 
-    public void setCardHolder(String cardHolder) {
-        this.cardHolder = cardHolder;
+    public void setCardColor(CardColor cardColor) {
+        this.cardColor = cardColor;
     }
 
-    public CardType getType() {
-        return type;
+    public CardType getCardType() {
+        return cardType;
     }
 
-    public void setType(CardType type) {
-        this.type = type;
-    }
-
-    public CardColor getColor() {
-        return color;
-    }
-
-    public void setColor(CardColor color) {
-        this.color = color;
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
     }
 
     public String getNumber() {
@@ -73,12 +72,20 @@ public class Card {
         this.number = number;
     }
 
-    public int getCvv() {
+    public Integer getCvv() {
         return cvv;
     }
 
-    public void setCvv(int cvv) {
+    public void setCvv(Integer cvv) {
         this.cvv = cvv;
+    }
+
+    public String getCardHolder() {
+        return cardHolder;
+    }
+
+    public void setCardHolder(String cardHolder) {
+        this.cardHolder = cardHolder;
     }
 
     public LocalDateTime getThruDate() {
@@ -104,6 +111,4 @@ public class Card {
     public void setClient(Client client) {
         this.client = client;
     }
-
-
 }

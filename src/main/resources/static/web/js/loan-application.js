@@ -10,13 +10,16 @@ var app = new Vue({
         errorMsg: null,
         accountToNumber: "VIN",
         amount: 0,
-        fees: []
+        fees: [],
+        firstName: "",
+        lastName: ""
     },
     methods:{
         getData: function(){
             Promise.all([axios.get("/api/loans"),axios.get("/api/clients/current/accounts")])
             .then((response) => {
                 //get loan types ifo
+                console.log(response[0].data);
                 this.loanTypes = response[0].data;
                 this.clientAccounts = response[1].data;
             })
@@ -76,7 +79,7 @@ var app = new Vue({
         },
         signOut: function(){
             axios.post('/api/logout')
-            .then(response => window.location.href="/web/index.html")
+            .then(response => window.location.href="/web/ecobank/index.html")
             .catch(() =>{
                 this.errorMsg = "Sign out failed"   
                 this.errorToats.show();
@@ -84,10 +87,13 @@ var app = new Vue({
         },
     },
     mounted: function(){
+        this.getData();
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));
         this.modal = new bootstrap.Modal(document.getElementById('confirModal'));
         this.okmodal = new bootstrap.Modal(document.getElementById('okModal'));
         this.feesmodal = new bootstrap.Modal(document.getElementById('feesModal'));
-        this.getData();
+        this.firstName = JSON.parse(sessionStorage.getItem("firstName"));
+        this.lastName = JSON.parse(sessionStorage.getItem("lastName"));
+        
     }
 })
